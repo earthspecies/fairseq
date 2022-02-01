@@ -18,6 +18,7 @@ from fairseq.data.dictionary import Dictionary
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
 from fairseq.models import BaseFairseqModel, register_model
 from fairseq.models.wav2vec.wav2vec2 import (
+    LAYER_TYPE_CHOICES,
     ConvFeatureExtractionModel,
     TransformerEncoder,
 )
@@ -209,6 +210,16 @@ class HubertConfig(FairseqDataclass):
         metadata={"help": "recompute activations and save memory for extra compute"},
     )
 
+    required_seq_len_multiple: int = field(
+        default=1,
+        metadata={
+            "help": "pad the input to encoder such that the sequence length is divisible by multiple"
+        },
+    )
+
+    layer_type: LAYER_TYPE_CHOICES = field(
+        default='transformer'
+    )
 
 @register_model("hubert", dataclass=HubertConfig)
 class HubertModel(BaseFairseqModel):

@@ -29,8 +29,12 @@ class WaveletFeatureReader(object):
         self.morlet_w = morlet_w
         self.n_wavelets = n_wavelets
 
-    def get_feats(self, path, ref_len=None): # ref len not used but included for compatibility
+    def get_feats(self, path, ref_len=None):
         x = np.load(path)
+        
+        if ref_len is not None and abs(ref_len - len(x)) > 160:
+            logging.warning(f"ref {ref_len} != read {len(x)} ({path})")
+            
         x = (x - np.mean(x, axis = 0, keepdims = True)) / (np.std(x, axis = 0, keepdims = True) + 1e-6)
         
         # perform wavelet transform
